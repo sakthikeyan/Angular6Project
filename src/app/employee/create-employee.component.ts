@@ -49,32 +49,51 @@ export class CreateEmployeeComponent implements OnInit {
     // });
   }
 
-  onLoadDataClick(): void {
-    //use setVallue to update all form control.
+  // onLoadDataClick(): void {
+  //   //use setVallue to update all form control.
 
-    this.employeeForm.setValue(
-      {
-        fullName: "Karthikeyan Sakthi",
-        email: "sakthikeyan@gmail.com",
-        skills: {
-          skillName: "ASP.NET MVC",
-          experienceInYear: "6",
-          proficiency: "advanced"
-        }
+  //   this.employeeForm.setValue(
+  //     {
+  //       fullName: "Karthikeyan Sakthi",
+  //       email: "sakthikeyan@gmail.com",
+  //       skills: {
+  //         skillName: "ASP.NET MVC",
+  //         experienceInYear: "6",
+  //         proficiency: "advanced"
+  //       }
+  //     }
+  //   )
+  //   //use patchValue to update sub set of controlsin the form.
+  //   // this.employeeForm.patchValue(
+  //   //   {
+  //   //     fullName: "Karthikeyan Sakthi",
+  //   //     email: "sakthikeyan@gmail.com",
+  //   //     // skills: {
+  //   //     //   skillName: "ASP.NET MVC",
+  //   //     //   experienceInYear: "6",
+  //   //     //   proficiency: "advanced"
+  //   //     // }
+  //   //   }
+  //   // )
+  // }
+
+  onLoadDataClick(): void {
+    this.logKeyValuePairs(this.employeeForm);
+  }
+
+  logKeyValuePairs(group: FormGroup): void {
+    Object.keys(group.controls).forEach((key: string) => {
+      const abstractControl = group.get(key);
+      if (abstractControl instanceof FormGroup) {
+        //Recursively call the method to loop through nested formgroup.
+        this.logKeyValuePairs(abstractControl);
       }
-    )
-    //use patchValue to update sub set of controlsin the form.
-    // this.employeeForm.patchValue(
-    //   {
-    //     fullName: "Karthikeyan Sakthi",
-    //     email: "sakthikeyan@gmail.com",
-    //     // skills: {
-    //     //   skillName: "ASP.NET MVC",
-    //     //   experienceInYear: "6",
-    //     //   proficiency: "advanced"
-    //     // }
-    //   }
-    // )
+      else {
+        //console.log('key=' + key + ' value=' + abstractControl.value);
+        //abstractControl.disable();
+        abstractControl.markAsDirty();
+      }
+    })
   }
   onSubmit(): void {
     // console.log(this.employeeForm.controls.fullName.value)
