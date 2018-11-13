@@ -9,7 +9,34 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 })
 export class CreateEmployeeComponent implements OnInit {
   employeeForm: FormGroup;
-  fullNameLength: 0;
+  //fullNameLength: 0;
+  validationMessage = {
+    'fullName': {
+      'required': 'Full Name is required.',
+      'minlength': 'Full name must be greater than 2 character.',
+      'maxlength': 'Full name must be less than 10 character'
+    },
+    'email': {
+      'required': 'Email is required.'
+    },
+    'skillName': {
+      'required': 'Skill name is required.'
+    },
+    'experienceInYears': {
+      'required': 'Experience is required.'
+    },
+    'proficiency': {
+      'required': 'Proficiency is required.'
+    }
+  };
+
+  formErrors = {
+    'fullName': '',
+    'email': '',
+    'skillName': '',
+    'experienceInYears': '',
+    'proficiency': ''
+  };
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -28,11 +55,11 @@ export class CreateEmployeeComponent implements OnInit {
 
     this.employeeForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
-      email: [''],
+      email: ['', Validators.required],
       skills: this.fb.group({
-        skillName: [''],
-        experienceInYear: [''],
-        proficiency: ['advanced']
+        skillName: ['', Validators.required],
+        experienceInYear: ['', Validators.required],
+        proficiency: ['', Validators.required]
       })
     })
 
@@ -77,28 +104,55 @@ export class CreateEmployeeComponent implements OnInit {
   //   // )
   // }
 
-  onLoadDataClick(): void {
-    this.logKeyValuePairs(this.employeeForm);
-  }
+  // onLoadDataClick(): void {
+  //   this.logKeyValuePairs(this.employeeForm);
+  // }
 
-  logKeyValuePairs(group: FormGroup): void {
-    Object.keys(group.controls).forEach((key: string) => {
-      const abstractControl = group.get(key);
-      if (abstractControl instanceof FormGroup) {
-        //Recursively call the method to loop through nested formgroup.
-        this.logKeyValuePairs(abstractControl);
-      }
-      else {
-        //console.log('key=' + key + ' value=' + abstractControl.value);
-        //abstractControl.disable();
-        abstractControl.markAsDirty();
-      }
-    })
-  }
+  // logKeyValuePairs(group: FormGroup): void {
+  //   Object.keys(group.controls).forEach((key: string) => {
+  //     const abstractControl = group.get(key);
+  //     if (abstractControl instanceof FormGroup) {
+  //       //Recursively call the method to loop through nested formgroup.
+  //       this.logKeyValuePairs(abstractControl);
+  //     }
+  //     else {
+  //       //console.log('key=' + key + ' value=' + abstractControl.value);
+  //       //abstractControl.disable();
+  //       abstractControl.markAsDirty();
+  //     }
+  //   })
+  // }
   onSubmit(): void {
     // console.log(this.employeeForm.controls.fullName.value)
     // console.log(this.employeeForm.get('fullName').value)
     // console.log(this.employeeForm.touched);
     // console.log(this.employeeForm.value);
+  }
+
+
+  onLoadDataClick(): void {
+    this.logValidationErrors(this.employeeForm);
+    console.log(this.formErrors);
+  }
+
+  logValidationErrors(group: FormGroup): void {
+    Object.keys(group.controls).forEach((key: string) => {
+      const abstractControl = group.get(key);
+      if (abstractControl instanceof FormGroup) {
+        //Recursively call the method to loop through nested formgroup.
+        this.logValidationErrors(abstractControl);
+      }
+      else {
+        this.formErrors[key] = '';
+        if (abstractControl && !abstractControl.valid) {
+          const message = this.validationMessage[key];
+          for (const errorkey in abstractControl.errors) {
+            if (errorkey) {
+              this.formErrors[key] += message[errorkey] + '';
+            }
+          }
+        }
+      }
+    })
   }
 }
