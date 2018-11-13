@@ -40,6 +40,7 @@ export class CreateEmployeeComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
+    
     // this.employeeForm = new FormGroup({
     //   fullName: new FormControl(),
     //   email: new  FormControl(),
@@ -50,7 +51,7 @@ export class CreateEmployeeComponent implements OnInit {
     //     proficiency: new FormControl()
     //   })
     // });
-
+    
     //Using Form Builder.
 
     this.employeeForm = this.fb.group({
@@ -58,10 +59,14 @@ export class CreateEmployeeComponent implements OnInit {
       email: ['', Validators.required],
       skills: this.fb.group({
         skillName: ['', Validators.required],
-        experienceInYear: ['', Validators.required],
+        experienceInYears: ['', Validators.required],
         proficiency: ['', Validators.required]
       })
     })
+
+    this.employeeForm.valueChanges.subscribe((data) => {
+      this.logValidationErrors(this.employeeForm);
+    });
 
     // this.employeeForm.get('fullName').valueChanges.subscribe((value:string) => {
     //   this.fullNameLength = value.length;
@@ -130,12 +135,12 @@ export class CreateEmployeeComponent implements OnInit {
   }
 
 
-  onLoadDataClick(): void {
-    this.logValidationErrors(this.employeeForm);
-    console.log(this.formErrors);
-  }
+  // onLoadDataClick(): void {
+  //   this.logValidationErrors(this.employeeForm);
+  //   console.log(this.formErrors);
+  // }
 
-  logValidationErrors(group: FormGroup): void {
+  logValidationErrors(group: FormGroup = this.employeeForm): void {
     Object.keys(group.controls).forEach((key: string) => {
       const abstractControl = group.get(key);
       if (abstractControl instanceof FormGroup) {
@@ -144,7 +149,7 @@ export class CreateEmployeeComponent implements OnInit {
       }
       else {
         this.formErrors[key] = '';
-        if (abstractControl && !abstractControl.valid) {
+        if (abstractControl && !abstractControl.valid && (abstractControl.touched || abstractControl.dirty)) {
           const message = this.validationMessage[key];
           for (const errorkey in abstractControl.errors) {
             if (errorkey) {
