@@ -19,6 +19,9 @@ export class CreateEmployeeComponent implements OnInit {
     'email': {
       'required': 'Email is required.'
     },
+    'phone': {
+      'required': 'Phone is required.'
+    },
     'skillName': {
       'required': 'Skill name is required.'
     },
@@ -33,6 +36,7 @@ export class CreateEmployeeComponent implements OnInit {
   formErrors = {
     'fullName': '',
     'email': '',
+    'phone': '',
     'skillName': '',
     'experienceInYears': '',
     'proficiency': ''
@@ -40,7 +44,7 @@ export class CreateEmployeeComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    
+
     // this.employeeForm = new FormGroup({
     //   fullName: new FormControl(),
     //   email: new  FormControl(),
@@ -51,12 +55,14 @@ export class CreateEmployeeComponent implements OnInit {
     //     proficiency: new FormControl()
     //   })
     // });
-    
+
     //Using Form Builder.
 
     this.employeeForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
+      contactPreference: ['email'],
       email: ['', Validators.required],
+      phone: [''],
       skills: this.fb.group({
         skillName: ['', Validators.required],
         experienceInYears: ['', Validators.required],
@@ -66,6 +72,10 @@ export class CreateEmployeeComponent implements OnInit {
 
     this.employeeForm.valueChanges.subscribe((data) => {
       this.logValidationErrors(this.employeeForm);
+    });
+
+    this.employeeForm.get('contactPreference').valueChanges.subscribe((data: string) => {
+      this.onContactPrefernceChange(data);
     });
 
     // this.employeeForm.get('fullName').valueChanges.subscribe((value:string) => {
@@ -139,6 +149,17 @@ export class CreateEmployeeComponent implements OnInit {
   //   this.logValidationErrors(this.employeeForm);
   //   console.log(this.formErrors);
   // }
+
+  onContactPrefernceChange(selectedValue: string) {
+    const phoneControl = this.employeeForm.get('phone');
+    if (selectedValue === 'phone') {
+      phoneControl.setValidators(Validators.required);
+    }
+    else {
+      phoneControl.clearValidators();
+    }
+    phoneControl.updateValueAndValidity();
+  }
 
   logValidationErrors(group: FormGroup = this.employeeForm): void {
     Object.keys(group.controls).forEach((key: string) => {

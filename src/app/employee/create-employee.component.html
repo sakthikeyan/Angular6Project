@@ -4,26 +4,58 @@
       <h3 class="panel-title" Create Employee></h3>
     </div>
     <div class="panel-body">
-      <div class="form-group" [ngClass]="{'has-error' : formErrors.fullName}">
-        <label class="col-sm-2 control-lable" for="fullName">Full Name</label>
+
+      <div class="form-group" [ngClass]="{'has-error': formErrors.fullName}">
+        <label class="col-sm-2 control-label" for="fullName">Full Name</label>
         <div class="col-sm-8">
-          <input id="fullName" placeholder="Full Name" formControlName="fullName" type="text" class="form-control"
+          <input id="fullName" type="text" class="form-control" placeholder="Full Name" formControlName="fullName"
             (blur)="logValidationErrors()">
-          <label>{{ fullNameLength }}</label>
           <span class="help-block" *ngIf="formErrors.fullName">
             {{formErrors.fullName}}
           </span>
         </div>
       </div>
 
-      <div class="form-group" [ngClass]="{'has-error' : formErrors.email}">
-        <label class="col-sm-2 control-lable" for="email">
-          Email
-        </label>
+      <!-- <div class="form-group">
+        <label class="col-md-2 control-label">Contact Preference</label>
+        <div class="col-md-8">
+          <label class="radio-inline">
+            <input type="radio" value="email" formControlName="contactPreference" (click)="onContactPrefernceChange('email')">Email
+          </label>
+          <label class="radio-inline">
+            <input type="radio" value="phone" formControlName="contactPreference" (click)="onContactPrefernceChange('phone')">Phone
+          </label>
+        </div>
+      </div> -->
+
+      <div class="form-group">
+          <label class="col-md-2 control-label">Contact Preference</label>
+          <div class="col-md-8">
+            <label class="radio-inline">
+              <input type="radio" value="email" formControlName="contactPreference">Email
+            </label>
+            <label class="radio-inline">
+              <input type="radio" value="phone" formControlName="contactPreference">Phone
+            </label>
+          </div>
+        </div>
+
+      <div class="form-group" [ngClass]="{'has-error': formErrors.email}">
+        <label class="col-sm-2 control-label" for="email">Email</label>
         <div class="col-sm-8">
-          <input id="email" type="text" placeholder="Email" formControlName="email" class="form-control" (blur)="logValidationErrors()">
+          <input id="email" type="text" class="form-control" placeholder="Email" formControlName="email" (blur)="logValidationErrors()">
           <span class="help-block" *ngIf="formErrors.email">
             {{formErrors.email}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group" [ngClass]="{'has-error': formErrors.phone}">
+        <label class="col-sm-2 control-label" for="email">Phone</label>
+        <div class="col-sm-8">
+          <input id="phone" type="text" class="form-control" placeholder="Phone" formControlName="phone" (blur)="logValidationErrors()">
+          <span class="help-block" *ngIf="formErrors.phone">
+            {{formErrors.phone}}
           </span>
         </div>
       </div>
