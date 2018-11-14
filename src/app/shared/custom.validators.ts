@@ -1,4 +1,5 @@
 import { AbstractControl } from '@angular/forms';
+
 export class CustomValidators {
     static emailDomain(domainName: string) {
         return (control: AbstractControl): { [key: string]: any } | null => {
